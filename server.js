@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 // Enable CORS and JSON parsing
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configure Multer for PDF file uploads (memory storage, max 50MB)
@@ -113,8 +114,9 @@ app.post('/api/next-question', async (req, res) => {
       return res.status(400).json({ error: 'Please upload a textbook PDF first.' });
     }
 
-    const preferredLanguage = req.body.language || null;
-    const requestedPart = req.body.part || 'all';
+    const body = req.body || {};
+    const preferredLanguage = body.language || null;
+    const requestedPart = body.part || 'all';
     const generated = await geminiService.generateQuestion(
       session.previousQuestions,
       preferredLanguage,
@@ -151,7 +153,7 @@ app.post('/api/next-question', async (req, res) => {
 // 4. Submit & Evaluate Answer
 app.post('/api/submit-answer', (req, res) => {
   try {
-    const { selectedAnswer } = req.body;
+    const { selectedAnswer } = req.body || {};
     if (!session.currentQuestion) {
       return res.status(400).json({ error: 'No question is currently waiting for an answer.' });
     }
