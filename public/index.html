@@ -313,6 +313,14 @@
     </main>
   </div>
 
-  <script src="app.js?v=2"></script>
+  <script>
+    // Point Firebase Hosting to the live Render backend; fallback to relative URL for localhost
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      window.EXAM_AGENT_API_URL = '';
+    } else {
+      window.EXAM_AGENT_API_URL = 'https://exam-agent-km50.onrender.com';
+    }
+  </script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
