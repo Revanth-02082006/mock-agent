@@ -245,6 +245,11 @@ app.post('/api/clear-document', (req, res) => {
   res.json({ success: true, message: 'Active document cleared.' });
 });
 
+// Health check endpoint for uptime/Render
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`TNPSC Question Practice Agent running at http://0.0.0.0:${PORT}`);
 });
