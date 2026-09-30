@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mock Test - SSLC Standard</title>
+  <meta name="description" content="Mock test question practice generated exclusively from your uploaded textbook PDF.">
+  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="brand">
+          <h1 class="brand-title"><span class="badge-exam">Mock test</span></h1>
+        </div>
+        <div id="activeSourceBar" class="active-source-bar hidden">
+          <span class="source-label">Active Source:</span>
+          <span id="activeSourceFilename" class="source-filename">—</span>
+          <button id="changePdfBtn" class="btn-text" title="Switch to another textbook PDF">Change Book</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- SCREEN 1: Initial Upload Screen -->
+      <section id="uploadScreen" class="screen-view active">
+        <div class="card upload-card">
+          <div class="card-header">
+            <h2>Upload your textbook PDF</h2>
+            <p class="card-subtitle">
+              Upload any Tamil Nadu State Board or standard textbook PDF to generate realistic TNPSC Group 4 practice questions.
+            </p>
+          </div>
+
+          <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload textbook PDF">
+            <svg class="upload-icon" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.75">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="12" y1="18" x2="12" y2="12"></line>
+              <polyline points="9 15 12 12 15 15"></polyline>
+            </svg>
+            <p class="drop-primary-text">Click to browse or drag &amp; drop textbook PDF</p>
+            <p class="drop-secondary-text">PDF format • Tamil or English • Max 50 MB</p>
+            <input type="file" id="pdfFileInput" accept="application/pdf,.pdf" class="file-input" hidden>
+          </div>
+
+          <!-- Upload Status / Processing Indicator -->
+          <div id="uploadStatus" class="status-box hidden">
+            <div class="spinner"></div>
+            <span id="uploadStatusText">Reading textbook PDF and extracting pages...</span>
+          </div>
+
+          <!-- Document Confirmation (after upload) -->
+          <div id="uploadSuccessCard" class="doc-confirmation-box hidden">
+            <div class="doc-meta-row">
+              <span class="doc-icon">📖</span>
+              <div class="doc-details">
+                <span class="doc-title-label">Selected Source:</span>
+                <strong id="selectedFilename" class="doc-filename">Class 8 Tamil.pdf</strong>
+                <div class="doc-tags">
+                  <span id="docPagesTag" class="tag">0 Pages</span>
+                  <span id="docLangTag" class="tag">Language: Tamil</span>
+                  <span class="tag tag-verified">Source-Locked</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-row">
+              <button id="startPracticeBtn" class="btn btn-primary btn-large">
+                Start Practice &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Error Alert -->
+          <div id="uploadError" class="alert alert-error hidden">
+            <span id="uploadErrorText">Could not read this PDF. Please try a text-readable PDF.</span>
+          </div>
+
+          <!-- Source-Lock Guarantee Notice -->
+          <div class="source-lock-notice">
+            <div class="notice-title">🛡️ Strict Source Lock</div>
+            <p>
+              Questions are created <strong>only</strong> from the content of your uploaded textbook. External web facts or syllabus content are strictly prohibited from entering question items.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 2: Question Practice Screen -->
+      <section id="practiceScreen" class="screen-view hidden">
+        <!-- Minimal Progress Bar -->
+        <div class="progress-bar-card">
+          <div class="progress-metric">
+            <span class="metric-label">Question:</span>
+            <strong id="statQuestionNum" class="metric-value">1</strong>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="progress-metric">
+            <span class="metric-label">Correct:</span>
+            <strong id="statCorrect" class="metric-value text-success">0</strong>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="progress-metric">
+            <span class="metric-label">Wrong:</span>
+            <strong id="statWrong" class="metric-value text-danger">0</strong>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="progress-metric">
+            <span class="metric-label">Unanswered:</span>
+            <strong id="statUnanswered" class="metric-value text-muted">0</strong>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="progress-metric">
+            <span class="metric-label">Accuracy:</span>
+            <strong id="statAccuracy" class="metric-value">0%</strong>
+          </div>
+        </div>
+
+        <!-- TNPSC Exam Part Selection Toolbar -->
+        <div class="part-selector-toolbar" role="group" aria-label="TNPSC Exam Part Selection">
+          <div class="part-selector-header">
+            <span class="part-selector-label">🎯 தேர்வுப் பகுதி (Exam Part):</span>
+            <span class="part-selector-hint">Generate questions for specific TNPSC Group 4 sections from your textbook</span>
+          </div>
+          <div class="part-pill-row" role="tablist">
+            <button type="button" class="part-pill active" data-part="all" id="pillAll" role="tab" aria-selected="true">
+              <span class="pill-dot"></span>
+              <span class="pill-title">அனைத்தும் (All 3 Parts)</span>
+            </button>
+            <button type="button" class="part-pill" data-part="partA" id="pillPartA" role="tab" aria-selected="false">
+              <span class="pill-dot pill-dot-a"></span>
+              <span class="pill-title">Part A: பொது அறிவியல் & பொது அறிவு</span>
+              <span class="pill-sub">General Science & Studies</span>
+            </button>
+            <button type="button" class="part-pill" data-part="partB" id="pillPartB" role="tab" aria-selected="false">
+              <span class="pill-dot pill-dot-b"></span>
+              <span class="pill-title">Part B: திறனறிவும் மனக்கணக்கும்</span>
+              <span class="pill-sub">Aptitude & Mental Ability</span>
+            </button>
+            <button type="button" class="part-pill" data-part="partC" id="pillPartC" role="tab" aria-selected="false">
+              <span class="pill-dot pill-dot-c"></span>
+              <span class="pill-title">Part C: பொதுத் தமிழ்</span>
+              <span class="pill-sub">Tamil Eligibility Test</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Question Language / Medium Selection Toolbar -->
+        <div class="part-selector-toolbar medium-selector-toolbar" role="group" aria-label="Question Medium Selection">
+          <div class="part-selector-header">
+            <span class="part-selector-label">🌐 கேள்வி மொழி (Question Medium):</span>
+            <span class="part-selector-hint">Select question language (Auto matches your uploaded book: English for Science/Social, Tamil for Tamil)</span>
+          </div>
+          <div class="part-pill-row medium-pill-row" role="tablist">
+            <button type="button" class="part-pill medium-pill active" data-lang="auto" id="pillLangAuto" role="tab" aria-selected="true">
+              <span class="pill-dot"></span>
+              <span class="pill-title">Auto (Match Textbook)</span>
+              <span class="pill-sub">English book → English | Tamil book → தமிழ்</span>
+            </button>
+            <button type="button" class="part-pill medium-pill" data-lang="en" id="pillLangEn" role="tab" aria-selected="false">
+              <span class="pill-dot pill-dot-a"></span>
+              <span class="pill-title">English Medium</span>
+              <span class="pill-sub">Questions & Options in English</span>
+            </button>
+            <button type="button" class="part-pill medium-pill" data-lang="ta" id="pillLangTa" role="tab" aria-selected="false">
+              <span class="pill-dot pill-dot-c"></span>
+              <span class="pill-title">தமிழ் வழி (Tamil Medium)</span>
+              <span class="pill-sub">வினா & விடைகள் தமிழில்</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Question Loading Indicator -->
+        <div id="questionLoading" class="card question-loading-card hidden">
+          <div class="spinner large-spinner"></div>
+          <h3>Setting TNPSC Question...</h3>
+          <p id="loadingSubtext">Reading textbook content and applying TNPSC Group 4 standards...</p>
+        </div>
+
+        <!-- Question Card -->
+        <div id="questionCard" class="card question-card">
+          <div class="question-header">
+            <div class="question-tags-left">
+              <span id="examPartBadge" class="badge badge-part badge-part-c">Part C • பொதுத் தமிழ்</span>
+              <span id="syllabusUnitBadge" class="badge badge-unit">இலக்கணம்</span>
+              <span id="questionTypeBadge" class="badge badge-type">Direct MCQ</span>
+              <span id="difficultyBadge" class="badge badge-difficulty">Moderate</span>
+              <span id="sourcePageBadge" class="badge badge-page">Page —</span>
+            </div>
+            <div class="question-standard">TNPSC Group 4 Standard (SSLC)</div>
+          </div>
+
+          <!-- Question Content -->
+          <div class="question-body">
+            <div class="question-text-wrapper">
+              <span class="question-number-lead" id="displayQNum">Q1.</span>
+              <div id="questionText" class="question-text">
+                Loading question...
+              </div>
+            </div>
+
+            <!-- Answer Options List -->
+            <form id="optionsForm" class="options-group" onsubmit="return false;">
+              <label class="option-item" id="optionItemA">
+                <input type="radio" name="tnpscOption" value="A" id="optA">
+                <span class="option-key">A</span>
+                <span class="option-content" id="optTextA">—</span>
+              </label>
+
+              <label class="option-item" id="optionItemB">
+                <input type="radio" name="tnpscOption" value="B" id="optB">
+                <span class="option-key">B</span>
+                <span class="option-content" id="optTextB">—</span>
+              </label>
+
+              <label class="option-item" id="optionItemC">
+                <input type="radio" name="tnpscOption" value="C" id="optC">
+                <span class="option-key">C</span>
+                <span class="option-content" id="optTextC">—</span>
+              </label>
+
+              <label class="option-item" id="optionItemD">
+                <input type="radio" name="tnpscOption" value="D" id="optD">
+                <span class="option-key">D</span>
+                <span class="option-content" id="optTextD">—</span>
+              </label>
+
+              <label class="option-item option-item-idk" id="optionItemE">
+                <input type="radio" name="tnpscOption" value="E" id="optE">
+                <span class="option-key">E</span>
+                <span class="option-content" id="optTextE">விடை தெரியவில்லை (I don't know)</span>
+              </label>
+            </form>
+          </div>
+
+          <!-- Question Action Footer -->
+          <div class="question-footer">
+            <div class="keyboard-tip">
+              <span>Tip: Press keys <kbd>A</kbd>-<kbd>E</kbd> or <kbd>1</kbd>-<kbd>5</kbd> to select, <kbd>Enter</kbd> to submit.</span>
+            </div>
+            <button id="submitAnswerBtn" class="btn btn-primary" disabled>
+              Submit Answer
+            </button>
+          </div>
+        </div>
+
+        <!-- Evaluation & Explanation Card -->
+        <div id="evaluationCard" class="card evaluation-card hidden">
+          <div id="evalBanner" class="eval-banner">
+            <span id="evalIcon" class="eval-icon">✅</span>
+            <div class="eval-heading-wrap">
+              <h3 id="evalTitle">Correct</h3>
+              <p id="evalSubtitle">Good job! Your answer matches the textbook source.</p>
+            </div>
+          </div>
+
+          <div class="eval-details-box">
+            <div class="eval-answers-summary">
+              <div class="summary-line">
+                <span class="summary-label">Exam Section:</span>
+                <div class="eval-tags-inline">
+                  <span id="evalPartBadge" class="badge badge-part badge-part-c">Part C • பொதுத் தமிழ்</span>
+                  <span id="evalUnitBadge" class="badge badge-unit">இலக்கணம்</span>
+                </div>
+              </div>
+              <div class="summary-line">
+                <span class="summary-label">Your Answer:</span>
+                <strong id="evalUserAnswer">Option A</strong>
+              </div>
+              <div class="summary-line">
+                <span class="summary-label">Correct Answer:</span>
+                <strong id="evalCorrectAnswer" class="text-success">Option A</strong>
+              </div>
+            </div>
+
+            <!-- Explanation Grounded in PDF -->
+            <div class="explanation-section">
+              <h4 class="section-subheading">Explanation</h4>
+              <p id="evalExplanationText" class="explanation-body">
+                —
+              </p>
+            </div>
+
+            <!-- Source Evidence (Page + Verbatim Excerpt) -->
+            <div class="source-evidence-section">
+              <div class="evidence-header">
+                <span class="evidence-icon">📜</span>
+                <strong>Source Evidence in Uploaded PDF</strong>
+                <span id="evidencePageBadge" class="badge badge-page">Page 12</span>
+              </div>
+              <blockquote id="evidenceQuote" class="evidence-quote">
+                "..."
+              </blockquote>
+            </div>
+          </div>
+
+          <div class="eval-footer">
+            <button id="nextQuestionBtn" class="btn btn-primary btn-large">
+              Next Question &rarr;
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js?v=2"></script>
+</body>
+</html>
